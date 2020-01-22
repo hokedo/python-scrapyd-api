@@ -24,11 +24,12 @@ class Client(Session):
 
         try:
             json = response.json()
-            if json['status'] == 'ok':
+            if json.get('status') == 'ok':
                 json.pop('status')
                 return json
-            elif json['status'] == 'error':
+            elif json.get('status') == 'error':
                 raise ScrapydResponseError(json['message'])
+            return json
         except ValueError:
             return response.text
 

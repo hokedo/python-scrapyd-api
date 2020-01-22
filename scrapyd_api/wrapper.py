@@ -211,3 +211,18 @@ class ScrapydAPI(object):
         )
 
         return self.client.get(url, timeout=self.timeout)
+
+    def items(self, project, spider, job):
+        """
+        Fetch the job's scraped items
+        """
+        url = urljoin(
+            self.target,
+            "items/{project}/{spider}/{job}.jl".format(
+                project=project,
+                spider=spider,
+                job=job
+            )
+        )
+
+        return self.client.get(url, timeout=self.timeout)
