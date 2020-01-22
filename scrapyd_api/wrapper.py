@@ -196,3 +196,18 @@ class ScrapydAPI(object):
         url = self._build_url(constants.DAEMON_STATUS_ENDPOINT)
         json = self.client.get(url, timeout=self.timeout)
         return json
+
+    def logs(self, project, spider, job):
+        """
+        Fetch the job's log
+        """
+        url = urljoin(
+            self.target,
+            "logs/{project}/{spider}/{job}.log".format(
+                project=project,
+                spider=spider,
+                job=job
+            )
+        )
+
+        return self.client.get(url, timeout=self.timeout)

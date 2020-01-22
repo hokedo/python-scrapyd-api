@@ -24,14 +24,13 @@ class Client(Session):
 
         try:
             json = response.json()
+            if json['status'] == 'ok':
+                json.pop('status')
+                return json
+            elif json['status'] == 'error':
+                raise ScrapydResponseError(json['message'])
         except ValueError:
-            raise ScrapydResponseError("Scrapyd returned an invalid JSON "
-                                       "response: {0}".format(response.text))
-        if json['status'] == 'ok':
-            json.pop('status')
-            return json
-        elif json['status'] == 'error':
-            raise ScrapydResponseError(json['message'])
+            return response.text
 
     def request(self, *args, **kwargs):
         response = super(Client, self).request(*args, **kwargs)
