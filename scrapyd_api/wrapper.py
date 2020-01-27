@@ -9,6 +9,10 @@ from .compat import (
     urljoin
 )
 
+try:
+    import ujson as json
+except ImportError:
+    import json
 
 class ScrapydAPI(object):
     """
@@ -225,4 +229,8 @@ class ScrapydAPI(object):
             )
         )
 
-        return self.client.get(url, timeout=self.timeout)
+        response = self.client.get(url, timeout=self.timeout)
+        if isinstance(response, dict):
+            return [response]
+
+        return [json.loads(line) for line in response.split("\n") if line.strip()]
